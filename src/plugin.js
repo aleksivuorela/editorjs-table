@@ -37,6 +37,14 @@ class Table {
   }
 
   /**
+   * Notify core that read-only mode is supported
+   * @returns {boolean}
+   */
+  static get isReadOnlySupported () {
+    return true;
+  }
+
+  /**
    * Get Tool toolbox settings
    * icon - Tool icon's SVG
    * title - title to show in toolbox
@@ -56,12 +64,13 @@ class Table {
    * @param {object} config - user config for Tool
    * @param {object} api - Editor.js API
    */
-  constructor({ data, config, api }) {
+  constructor({ data, config, api, readOnly }) {
     this.api = api;
     this.wrapper = undefined;
     this.config = config;
     this.data = data;
-    this._tableConstructor = new TableConstructor(data, config, api);
+    this.readOnly = readOnly;
+    this._tableConstructor = new TableConstructor(data, config, api, readOnly);
 
     this.actions = [
       {
@@ -235,7 +244,8 @@ class Table {
     this._tableConstructor = new TableConstructor(
       this.data,
       this.config,
-      this.api
+      this.api,
+      this.readOnly,
     );
     this.wrapper.appendChild(this._tableConstructor.htmlElement);
   }
